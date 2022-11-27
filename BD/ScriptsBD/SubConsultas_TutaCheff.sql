@@ -1,0 +1,5 @@
+--Subconsultas (sobre o tema escolhido)			
+--a.	exemplo de um comando utilizando subconsultas que utilize o operador in.
+--b.	exemplo de um comando utilizando subconsultas que utilize o operador not exists
+--c.	exemplo de uma subconsulta utilizada dentro de um comando Update.
+--d.	exemplo de uma subconsulta utilizada dentro de um comando Delete.
