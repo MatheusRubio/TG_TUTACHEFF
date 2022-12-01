@@ -108,7 +108,16 @@ ALTER TABLE TB_Denuncia
 ADD CONSTRAINT PK_Denuncia_ID PRIMARY KEY(id_denuncia);
 
 
---- Criando as FK 
+--- Criando as FK
+--catIng_UnidMedida
+ALTER TABLE TB_catIngr_uniMedida
+ ADD CONSTRAINT FK_IngreMedida_idMedida FOREIGN KEY(fk_id_unidMedida)
+ REFERENCES TB_Unidade_Medida(id_unidMedida)
+ 
+ALTER TABLE TB_catIngr_uniMedida
+ ADD CONSTRAINT FK_IngreMedida_idCategoria FOREIGN KEY(fk_id_categoriaIngrediente)
+ REFERENCES TB_Categoria_Ingrediente(id_categoriaIngrediente)
+
 --Denuncia
 ALTER TABLE TB_Denuncia
  ADD CONSTRAINT FK_Denuncia_IdDenuncia FOREIGN KEY(id_receita) REFERENCES TB_Receita;
