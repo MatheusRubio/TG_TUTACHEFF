@@ -1,0 +1,111 @@
+/* Lógico_TutaCheff2: */
+
+CREATE TABLE receita (
+    id_receita NUMERIC PRIMARY KEY,
+    nomeReceita VARCHAR,
+    modoDePreparo VARCHAR,
+    sugestaoCheff VARCHAR,
+    curtidas NUMERIC,
+    fk_id_usuario NUMERIC,
+    fk_id_categoriaReceita NUMERIC
+);
+
+CREATE TABLE denuncia (
+    id_denuncia NUMERIC PRIMARY KEY,
+    descricaoDenuncia VARCHAR,
+    status VARCHAR,
+    dataHoraDenuncia DATE,
+    fk_id_receita NUMERIC
+);
+
+CREATE TABLE melhoria (
+    id_melhoria   NUMERIC PRIMARY KEY,
+    descricaoMelhoria VARCHAR,
+    dataHoraMelhoria DATE,
+    status VARCHAR
+);
+
+CREATE TABLE catReceita (
+    id_categoriaReceita NUMERIC PRIMARY KEY,
+    nomeCategoriaReceita VARCHAR
+);
+
+CREATE TABLE ingrediente (
+    id_ingrediente NUMERIC PRIMARY KEY,
+    nomeIngrediente  VARCHAR,
+    fk_id_categoriaIngrediente   NUMERIC
+);
+
+CREATE TABLE catIngrediente (
+    id_categoriaIngrediente   NUMERIC PRIMARY KEY,
+    nomeCategoriaIngrediente VARCHAR
+);
+
+CREATE TABLE unidMedida (
+    id_unidMedida   NUMERIC PRIMARY KEY,
+    tipoMedida  VARCHAR
+);
+
+CREATE TABLE item_receita (
+    quantidadeIngrediente NUMERIC,
+    id_ingrReceita NUMERIC PRIMARY KEY,
+    fk_id_catMedida NUMERIC,
+    fk_id_ingrediente NUMERIC,
+    fk_id_receita NUMERIC
+);
+
+CREATE TABLE catIngr_uniMedida (
+    id_catMedida NUMERIC PRIMARY KEY,
+    fk_id_unidMedida   NUMERIC,
+    fk_id_categoriaIngrediente   NUMERIC
+);
+
+CREATE TABLE usuario (
+    id_usuario NUMERIC PRIMARY KEY,
+    email VARCHAR,
+    senha VARCHAR,
+    nomeUsuario VARCHAR,
+    telefone VARCHAR,
+    usuario_TIPO NUMERIC
+);
+ 
+ALTER TABLE receita ADD CONSTRAINT FK_receita_idusuario
+    FOREIGN KEY (fk_id_usuario)
+    REFERENCES usuario (id_usuario)
+    ON DELETE CASCADE;
+ 
+ALTER TABLE receita ADD CONSTRAINT FK_receita_idcategoria
+    FOREIGN KEY (fk_id_categoriaReceita)
+    REFERENCES catReceita (id_categoriaReceita)
+    ON DELETE CASCADE;
+ 
+ALTER TABLE denuncia ADD CONSTRAINT FK_denuncia_idreceita
+    FOREIGN KEY (fk_id_receita)
+    REFERENCES receita (id_receita)
+    ON DELETE CASCADE;
+ 
+ALTER TABLE ingrediente ADD CONSTRAINT FK_ingrediente_idcategoria
+    FOREIGN KEY (fk_id_categoriaIngrediente)
+    REFERENCES catIngrediente (id_categoriaIngrediente)
+    ON DELETE CASCADE;
+ 
+ALTER TABLE item_receita ADD CONSTRAINT FK_itemreceita_idcatmedida
+    FOREIGN KEY (fk_id_catMedida)
+    REFERENCES catIngr_uniMedida_possui (id_catMedida)
+    ON DELETE CASCADE;
+ 
+ALTER TABLE item_receita ADD CONSTRAINT FK_itemreceita_idingred
+    FOREIGN KEY (fk_id_ingrediente)
+    REFERENCES ingrediente (id_ingrediente);
+ 
+ALTER TABLE item_receita ADD CONSTRAINT FK_item_idreceita
+    FOREIGN KEY (fk_id_receita)
+    REFERENCES receita (id_receita);
+ 
+ALTER TABLE catIngr_uniMedida ADD CONSTRAINT FK_catIngruniMedida_idUnid
+    FOREIGN KEY (fk_id_unidMedida  )
+    REFERENCES unidMedida (id_unidMedida  );
+ 
+ALTER TABLE catIngr_uniMedida ADD CONSTRAINT FK_catIngruniMedida_idCatIngr
+    FOREIGN KEY (fk_id_categoriaIngrediente)
+    REFERENCES catIngrediente (id_categoriaIngrediente );
