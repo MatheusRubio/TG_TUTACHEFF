@@ -118,7 +118,7 @@ CREATE SEQUENCE seq_idCatReceita MINVALUE 0 start with 0 increment by 1 NOCACHE;
  VALUES(seq_idCatReceita.NEXTVAL, 'TESTE');*/
  
  
- --tudo de TB_Receita
+--tudo de TB_Receita
 create table TB_Receita(
 id_receita  NUMBER,
 fk_id_categoriaReceita number,
@@ -142,4 +142,53 @@ REFERENCES TB_Usuario;
 CREATE SEQUENCE seq_idReceita MINVALUE 0 start with 0 increment by 1 NOCACHE;
 
 /*INSERT INTO TB_Receita(id_receita, fk_id_categoriaReceita, fk_id_usuario, nomeReceita, modoDePreparo, sugestaoCheff, curtidas)
- VALUES(seq_idReceita.NEXTVAL, 0, 0, <nome_receita>, <preparo>, <sugestao>, 0);*/
+ VALUES(seq_idReceita.NEXTVAL, <id_catReceita>, <id_usuario>, <nome_receita>, <preparo>, <sugestao>, 0);*/
+
+
+--tudo de TB_item_receita
+CREATE TABLE TB_item_receita (
+id_ingrReceita NUMERIC NOT NULL,
+fk_id_catMedida NUMERIC NOT NULL,
+fk_id_ingrediente NUMERIC NOT NULL,
+fk_id_receita NUMERIC NOT NULL,
+quantidadeIngrediente NUMERIC(4) NOT NULL
+);
+
+ALTER TABLE TB_Item_Receita
+ADD CONSTRAINT PK_ITEMRECEITA_ID PRIMARY KEY(id_ingrReceita);
+
+ALTER TABLE TB_ITEM_RECEITA --FK
+ADD CONSTRAINT FK_ITEMRECEITA_ID_INGRMEDIDA FOREIGN KEY (fk_id_catMedida)
+REFERENCES TB_catIngr_uniMedida;
+ALTER TABLE TB_ITEM_RECEITA
+ADD CONSTRAINT FK_ITEMRECEITA_ID_INGREDIENTE FOREIGN KEY (fk_id_ingrediente)
+REFERENCES TB_Ingrediente;
+ALTER TABLE TB_ITEM_RECEITA
+ADD CONSTRAINT FK_ITEMRECEITA_ID_RECEITA FOREIGN KEY (fk_id_receita)
+REFERENCES TB_RECEITA;
+
+CREATE SEQUENCE seq_idItemReceita MINVALUE 0 start with 0 increment by 1 NOCACHE;
+
+/*INSERT INTO TB_ITEM_RECEITA(id_ingrReceita, fk_id_catMedida, fk_id_ingrediente, fk_id_receita, quantidadeIngrediente)
+ VALUES(seq_idItemReceita.NEXTVAL, <ID_INGRMEDIDA>, <ID_INGRE>, <ID_RECEITA>, 4);*/
+ 
+ 
+ --tudo de TB_Denuncia
+create table TB_Denuncia(
+id_denuncia NUMBER not null,
+fk_id_receita number not null,
+descricaoDenuncia varchar2(500) not null,
+status varchar2(20) not null,
+dataHoraDenuncia date not null
+);
+
+ALTER TABLE TB_Denuncia
+ ADD CONSTRAINT PK_Denuncia_ID PRIMARY KEY(id_denuncia);
+
+ALTER TABLE TB_Denuncia --FK
+ ADD CONSTRAINT FK_Denuncia_IdReceita FOREIGN KEY(fk_id_receita) REFERENCES TB_Receita;
+
+CREATE SEQUENCE seq_idDenuncia MINVALUE 0 start with 0 increment by 1 NOCACHE;
+
+/*INSERT INTO TB_DENUNCIA(id_denuncia, fk_id_receita, descricaoDenuncia, status, dataHoraDenuncia)
+ VALUES(seq_idDenuncia.NEXTVAL, <id_receita>, <desc_denuncia>, 'pend', SYSDATE);*/
