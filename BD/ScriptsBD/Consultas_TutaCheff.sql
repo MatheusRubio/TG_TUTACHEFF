@@ -1,7 +1,0 @@
---Consultas: Criar consultas significativas para a aplicação.    
---a.	Uma consulta usando junção de mais de 2 tabelas.
---b.	Uma consulta que seja útil para a lógica de negócios usando totalização e uma função de data.
---c.	Uma consulta usando junção externa left join ou right join 
---d.	Uma consulta  usando o operador de União.
---e.	Uma consulta usando o operador Minus
---f.	Uma consulta usando o operador de intersecção
