@@ -51,10 +51,10 @@ V_QTDEDENUNCIAS NUMBER;
 BEGIN
     SELECT COUNT(*)QTDE INTO V_QTDEDENUNCIAS
      FROM TB_Usuario US INNER JOIN TB_RECEITA RE ON RE.id_usuario=US.id_usuario INNER JOIN TB_DENUNCIA DE ON DE.id_receita=RE.id_receita
-	 WHERE US.id_usuario=P_IDUSUARIO
+	 WHERE US.id_usuario=P_IDUSUARIO;
      
     RETURN V_QTDEDENUNCIAS;        
-END FN_PACIENTE;
+END FN_DENUNCIAS_RECEB;
 
 /*Testar se o usuário recebe muitas denúncias em suas receitas*/
 SELECT 'Total de denuncias : ' || FN_DENUNCIAS_RECEB () FROM DUAL;
@@ -70,7 +70,7 @@ SUGESTAOCHEFF VARCHAR2(500)
 );
 
 Create or Replace trigger HistoricoReceita
-AFTER UPDATE on TB_RECEITA
+BEFORE INSERT OR UPDATE on TB_RECEITA
 for each row
 begin
   insert into TB_HIST_RECEITAS(DATAALTER,  ID_RECEITA, NOMERECEITA, MODODEPREPARO, SUGESTAOCHEFF)
@@ -81,9 +81,18 @@ end HistoricoReceita;
 /*VERIFICAR SE A RECEITA TEM PELO MENOS 2 INGREDIENTES CADASTRADOS ANTES DE INSERT OU UPDATE NO BANCO*/
 
 Create or Replace trigger VerificaIngredientes
-AFTER UPDATE on TB_RECEITA
+AFTER UPDATE OR INSERT on TB_RECEITA
 for each row
+DECLARE
+V_QTDEINGRED NUMBER(5);
 begin
-  insert into TB_HIST_RECEITAS(DATAALTER,  ID_RECEITA, NOMERECEITA, MODODEPREPARO, SUGESTAOCHEFF)
-   values(SYSDATE, :NEW.ID_RECEITA, :OLD.nomeReceita, :OLD.modoDePreparo, :OLD.sugestaoCheff);
-end VerificaIngredientes
+    SELECT COUNT(id_ingrReceita)QTDE INTO V_QTDEINGRED
+     FROM TB_item_receita WHERE id_receita=:NEW.id_receita;
+
+
+
+   IF V_QTDEINGRED < 2 THEN
+        ROLLBACK(); --Impede que inseira a receita inválida
+        raise_application_error(-20400,'Mínimo de dois ingredientes não atingidos p/ receita');
+        
+end VerificaIngredientes;
