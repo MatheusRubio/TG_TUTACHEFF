@@ -20,8 +20,8 @@ V_MENSAGEM VARCHAR(200);
 V_NOMEINGRE TB_INGREDIENTE.nomeIngrediente%TYPE;
 BEGIN
 	SELECT COUNT(IR.id_ingrReceita)QUANTIDADE  INTO V_QTDEUTILIZADO
-	 FROM TB_Ingrediente I LEFT JOIN  TB_item_receita IR ON I.id_ingrediente=IR.fk_id_ingrediente
-	WHERE IR.fk_id_ingrediente=P_IDINGRE;
+	 FROM TB_Ingrediente I LEFT JOIN  TB_item_receita IR ON I.id_ingrediente=IR.id_ingrediente
+	WHERE IR.id_ingrediente=P_IDINGRE;
     
     SELECT nomeIngrediente INTO V_NOMEINGRE
      FROM TB_INGREDIENTE WHERE ID_INGREDIENTE=P_IDINGRE;
@@ -50,7 +50,7 @@ CREATE OR REPLACE FUNCTION FN_DENUNCIAS_RECEB (P_IDUSUARIO NUMBER) RETURN NUMBER
 V_QTDEDENUNCIAS NUMBER;
 BEGIN
     SELECT COUNT(*)QTDE INTO V_QTDEDENUNCIAS
-     FROM TB_Usuario US INNER JOIN TB_RECEITA RE ON RE.fk_id_usuario=US.id_usuario INNER JOIN TB_DENUNCIA DE ON DE.fk_id_receita=RE.id_receita
+     FROM TB_Usuario US INNER JOIN TB_RECEITA RE ON RE.id_usuario=US.id_usuario INNER JOIN TB_DENUNCIA DE ON DE.id_receita=RE.id_receita
 	 WHERE US.id_usuario=P_IDUSUARIO
      
     RETURN V_QTDEDENUNCIAS;        
@@ -86,3 +86,4 @@ for each row
 begin
   insert into TB_HIST_RECEITAS(DATAALTER,  ID_RECEITA, NOMERECEITA, MODODEPREPARO, SUGESTAOCHEFF)
    values(SYSDATE, :NEW.ID_RECEITA, :OLD.nomeReceita, :OLD.modoDePreparo, :OLD.sugestaoCheff);
+end VerificaIngredientes
